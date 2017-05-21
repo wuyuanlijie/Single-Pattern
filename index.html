@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>doger相亲</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      padding-top: 50px;
+    }
+    button {
+      display: block;
+      margin: 0 auto;
+      width: 250px;
+      height: 40px;
+    }
+    body div {
+      color: #fff;
+      font-size: 30px;
+      font-weight: 500;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      background: url(./dog4.png);
+      -webkit-background-size: cover;
+      background-size: cover;
+    }
+    body img {
+      display: block;
+      margin: 0 auto;
+    }
+
+  </style>
+</head>
+<body>
+  <button id="findWife1">上帝给我造一个对象吧</button>
+  <button id="findWife2">上帝给我造一个对象吧-非惰性处理</button>
+  <button id="findWife3">上帝给我造一个对象吧-惰性非单例</button>
+  <button id="findWife4">上帝给我造一个对象吧-惰性单例</button>
+  <button id="findWife5">上帝给我造一个对象吧-惰性单例-通用</button>
+</body>
+<script>
+  // 最不可靠的方法
+  let CreateWife1 = function() {
+    let div = document.createElement('div')
+    div.innerText= "我是可爱的柴犬妹妹"
+    div.style.display = "none"
+    document.body.appendChild(div)
+    return div
+  }
+  document.getElementById('findWife1').addEventListener('click', function() {
+    let Wife1 = CreateWife1()
+    Wife1.style.display = "block"
+  })
+  
+  // 节点一直存在，变化display，浪费节点的非惰性
+  let Wife2 = (function() {
+    let div = document.createElement('div')
+    div.innerText= "我是可爱的柴犬妹妹"
+    div.style.display = "none"
+    document.body.appendChild(div)
+    return div
+  })()
+  document.getElementById('findWife2').addEventListener('click', function() {
+    Wife2.style.display = "block"
+  })
+
+  // 惰性非单例模式
+  let CreateWife2 = function() {
+    let div = document.createElement('div')
+    div.innerText= "我是可爱的柴犬妹妹"
+    div.style.display = "none"
+    document.body.appendChild(div)
+    return div
+  }
+  document.getElementById('findWife3').addEventListener('click', function() {
+    let Wife3 = CreateWife1()
+    Wife3.style.display = "block"
+  })
+
+
+  // 惰性单例模式
+  let CreateSingleWife = (function() {
+    let div;
+    return function() {
+      if(!div) {
+        div = document.createElement('div')
+        div.innerText= "我是可爱的柴犬妹妹"
+        console.log(div)
+        div.style.display = "none"
+        document.body.appendChild(div)
+      }
+      return div
+    }
+  })()
+  document.getElementById('findWife4').addEventListener('click', function() {
+    let SingleWife =  CreateSingleWife()
+    SingleWife.style.display = "block"
+  })
+
+  // 职责分离的单例模式
+
+  /**
+   *  getSingle 判断是否已经创建
+   *  
+  */
+  let getSingle = function(fn) {
+    let result;
+    return function() {
+      if(!result) {
+        return result = fn.apply(this, arguments)
+      }
+      return result 
+    }
+  }
+
+  // let createDiv = function() {
+  //   let div = document.createElement('div')
+  //   div.innerText= "我是可爱的柴犬妹妹"
+  //   div.style.display = "none"
+  //   document.body.appendChild(div)
+  //   return div
+  // }
+  // let createSingle = getSingle(createDiv)
+
+  let createImg = function() {
+    let oImg = document.createElement('img')
+    document.body.appendChild(oImg)
+    return oImg
+  }
+  let createSingle = getSingle(createImg)
+   // let createSingle = getSingle(createDiv)
+
+  document.getElementById('findWife5').addEventListener('click', function() {
+    // let Single =  createSingle()
+    // Single.style.display = "block"
+
+    let SingleImg = createSingle()
+    SingleImg.src = './dog4.png'
+  })
+  
+
+
+</script>
+</html>
